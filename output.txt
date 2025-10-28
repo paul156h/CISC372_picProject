@@ -1,0 +1,19 @@
+Script started on Tue 28 Oct 2025 02:36:25 PM EDT
+]0;jphealy@login00.darwin:~[?1034h[(ea-cisc372-silber:jphealy)@login00.darwin ~]$ salloc --ntasks=1 --cpus-per-task=4 --partition=stan dard
+salloc: Granted job allocation 5707250
+salloc: Waiting for resource configuration
+salloc: Nodes r1n03 are ready for job
+]0;jphealy@r1n03.darwin:~[?1034h[jphealy@r1n03 ~]$ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+]0;jphealy@r1n03.darwin:~[jphealy@r1n03 ~]$ srun ./pthread pic1.jpg edge
+pthreads using 20 threads
+Took 8 seconds
+]0;jphealy@r1n03.darwin:~[jphealy@r1n03 ~]$ srun ./openmp pic1.jpg edge
+OpenMP using 4 threads
+Took 8 seconds
+]0;jphealy@r1n03.darwin:~[jphealy@r1n03 ~]$ exit
+logout
+salloc: Relinquishing job allocation 5707250
+]0;jphealy@login00.darwin:~[(ea-cisc372-silber:jphealy)@login00.darwin ~]$ exit
+exit
+
+Script done on Tue 28 Oct 2025 02:37:59 PM EDT
