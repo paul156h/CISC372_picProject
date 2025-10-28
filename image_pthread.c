@@ -68,6 +68,9 @@ void *worker(void *arg) {
     int row, pix, bit;
     ThreadData *data = (ThreadData *)arg;
     for (row = data->startRow; row < data->endRow; row++) {
+        if (row == 0) {
+            printf("pthreads using %d threads\n", NUM_THREADS);
+        }
         for (pix=0;pix<data->srcImage->width;pix++){
             for (bit=0;bit<data->srcImage->bpp;bit++){
                 data->destImage->data[Index(pix,row,data->srcImage->width,bit,data->srcImage->bpp)]=getPixelValue(data->srcImage,pix,row,bit,data->algorithm);
