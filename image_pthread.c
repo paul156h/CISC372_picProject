@@ -90,11 +90,12 @@ void *worker(void *arg) {
 void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
     
     int rows_per_thread = srcImage->height / NUM_THREADS;
+    int i;
 
     pthread_t threads[NUM_THREADS];
     ThreadData thread_data[NUM_THREADS];
 
-    for (int i = 0; i < NUM_THREADS; i++) {
+    for (i = 0; i < NUM_THREADS; i++) {
         thread_data[i].startRow = i * rows_per_thread;
         thread_data[i].endRow = (i == NUM_THREADS - 1) ? srcImage->height : (i + 1) * rows_per_thread;
         thread_data[i].srcImage = srcImage;
@@ -104,7 +105,7 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
         pthread_create(&threads[i], NULL, worker, (void *)&thread_data[i]);
     }
 
-    for (int i = 0; i < NUM_THREADS; i++) {
+    for (i = 0; i < NUM_THREADS; i++) {
         pthread_join(threads[i], NULL);
     }
 
