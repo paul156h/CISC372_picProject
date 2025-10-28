@@ -12,7 +12,7 @@
 
 #include <pthread.h>
 
-#define NUM_THREADS 4
+#define NUM_THREADS 20
 
 //An array of kernel matrices to be used for image convolution.  
 //The indexes of these match the enumeration from the header file. ie. algorithms[BLUR] returns the kernel corresponding to a box blur.
@@ -30,7 +30,7 @@ typedef struct {
     int endRow;
     Image* srcImage;
     Image* destImage;
-    Matrix* algorithm;
+    double (*algorithm)[3];
 } ThreadData;
 
 //getPixelValue - Computes the value of a specific pixel on a specific channel using the selected convolution kernel
@@ -70,7 +70,7 @@ void *worker(void *arg) {
     for (row = data->startRow; row < data->endRow; row++) {
         for (pix=0;pix<data->srcImage->width;pix++){
             for (bit=0;bit<data->srcImage->bpp;bit++){
-                data->destImage->data[Index(pix,row,data->srcImage->width,bit,data->srcImage->bpp)]=getPixelValue(data->srcImage,pix,row,bit,*(data->algorithm));
+                data->destImage->data[Index(pix,row,data->srcImage->width,bit,data->srcImage->bpp)]=getPixelValue(data->srcImage,pix,row,bit,data->algorithm);
             }
         }
     }
@@ -96,7 +96,7 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
         thread_data[i].endRow = (i == NUM_THREADS - 1) ? srcImage->height : (i + 1) * rows_per_thread;
         thread_data[i].srcImage = srcImage;
         thread_data[i].destImage = destImage;
-        thread_data[i].algorithm = &algorithm;
+        thread_data[i].algorithm = algorithm;
 
         pthread_create(&threads[i], NULL, worker, (void *)&thread_data[i]);
     }
